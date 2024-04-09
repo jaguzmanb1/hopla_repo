@@ -95,6 +95,10 @@ class ImagesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         try:
             ticket = get_object_or_404(Ticket, pk=ticket_id)
 
+            user = request.user
+            if user.id != ticket.id_user.id:
+                return Response({"error": "No tienes permiso para agregar imágenes a este ticket."}, status=status.HTTP_403_FORBIDDEN)
+
             if ticket.completed:
                 return Response({"msg": "Ticket con todas las imagenes"}, status=status.HTTP_200_OK) 
             
